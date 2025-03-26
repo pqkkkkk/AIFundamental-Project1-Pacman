@@ -1,4 +1,0 @@
-Tạo bản đồ (ma trận)
-Tạo object nhân vật chính pacman (di chuyển theo điều khiển của người chơi)
-Tạo object ma đuổi theo nhân vật (di chuyển theo thuật toán đã được cài đặt)
-Tạo object coin, người chơi di chuyển pacman ăn coin sẽ tính vào điểm

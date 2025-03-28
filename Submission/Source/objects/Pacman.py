@@ -1,20 +1,20 @@
 import pygame
 
-CELL_SIZE = 30
-class Pacman():
+CELL_SIZE = 24
+class Pacman(pygame.sprite.Sprite):
     def __init__(self, eventManager, x, y, image):
+        super().__init__()
         self.eventManager = eventManager
         self.x = x
         self.y = y
         self.olx_x = x
         self.old_y = y
-        self.image = pygame.image.load(image)
+        self.avatar = pygame.image.load(image)
+        self.image = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
+        self.image.blit(self.avatar, (0, 0))  # Draw self.avatar onto self.image
+        self.rect = self.image.get_rect(top=x, left=y)
         self.speed = 1
         self.direction = "right"
-        self.rect = pygame.Rect(self.x, self.y, 32, 32)
-
-    def Draw(self, screen):
-        screen.blit(self.image, (self.x, self.y))
 
     def OnKeyDown(self, event):
         if event.key == pygame.K_LEFT:

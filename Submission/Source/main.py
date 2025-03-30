@@ -1,5 +1,6 @@
 import pygame
 from game_options.Level6 import RunGameOfLevel6
+from game_options.Level3 import RunGameOfLevel3
 def RunGameOfLevel(level):
     print(f"Running Level {level}")
     if level == 1:
@@ -8,6 +9,7 @@ def RunGameOfLevel(level):
         print("Level 2: Collect 5 coins")
     elif level == 3:
         print("Level 3: Collect 10 coins")
+        RunGameOfLevel3()
     elif level == 4:
         print("Level 4: Collect 15 coins")
     elif level == 5:

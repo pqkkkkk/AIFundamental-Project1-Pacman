@@ -12,4 +12,4 @@ class Ghost():
     
     def OnPacmanMoved(self, data):
         pass
-        
+    

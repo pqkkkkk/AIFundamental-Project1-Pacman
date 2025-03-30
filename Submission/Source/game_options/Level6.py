@@ -29,14 +29,28 @@ def RunGameOfLevel6():
     # Creating a map
     map_width = WIDTH // CELL_SIZE
     map_height = HEIGHT // CELL_SIZE
-    map = [[1 if x == 0 or x == map_width - 1 or y == 0 or y == map_height - 1 else 0 for x in range(map_width)] for y in range(map_height)]
-    # Draw the map
-    for y in range(len(map)):
-        for x in range(len(map[y])):
-            if map[y][x] == 1:
-                screen.fill((50, 50, 50), (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-            elif map[y][x] == 2:
-                screen.fill((200, 200, 200), (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+    map = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ]
     
     # Create objects
     eventManager = EventManager.EventManager()
@@ -52,7 +66,7 @@ def RunGameOfLevel6():
     # Adding some coins for demonstration
     map[2][2] = 2
     map[3][3] = 2
-    # Draw coins in the map
+    # Add coins
     for y in range(len(map)):
         for x in range(len(map[y])):
             if map[y][x] == 2:
@@ -77,6 +91,14 @@ def RunGameOfLevel6():
     background = pygame.Surface((WIDTH, HEIGHT))
     background.fill((0, 0, 0))
 
+    # Draw map on the background
+    for y in range(len(map)):
+        for x in range(len(map[y])):
+            if map[y][x] == 1:  # Tường
+                pygame.draw.rect(background, BLUE, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+            elif map[y][x] == 0:  # Coin hoặc vật thể khác
+                pygame.draw.rect(background, (0, 0, 0), (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                pygame.draw.circle(background, WHITE, (x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 6)
     # Điểm số
     score = 0
     font = pygame.font.SysFont(None, 24)
@@ -89,10 +111,24 @@ def RunGameOfLevel6():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
-                pacman.OnKeyDown(event)
-                pacman.Update()
-
-        # Kiểm tra va trạm
+                if not pacman.CheckCollisionWithWallIfMove(event,map):
+                    pacman.OnKeyDown(event)
+                    pacman.Update()
+        
+        # Check collision between pacman and ghosts
+        hits = pygame.sprite.spritecollide(pacman, ghost_group, False)
+        if hits:
+            running = False
+            # Display a game over message and stop the game
+            font = pygame.font.Font(None, 36)
+            text = font.render(f"Game Over. Score : {score}", True, RED)
+            text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
+            screen.blit(text, text_rect)
+            pygame.display.flip()
+            pygame.time.wait(2000)
+            break
+        
+        # Check collision between pacman and coins
         hits = pygame.sprite.spritecollide(pacman, coin_group, True)  # True: Xóa coin khi va chạm
         for coin in hits:
             score += 10

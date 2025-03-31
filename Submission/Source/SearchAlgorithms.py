@@ -75,7 +75,7 @@ def a_star_search(map, start, goal):
 
     return []  # Không tìm thấy đường đi
   
-  def bfs_search(map, start, goal):
+def bfs_search(map, start, goal):
     start_time = time.time()
     process = psutil.Process()
     memory_before = process.memory_info().rss
@@ -120,7 +120,6 @@ def a_star_search(map, start, goal):
     print(f"Số nút đã mở rộng: {expanded_nodes}")
 
     return []
-
 
 def dfs_search(map, start, goal):
     start_time = time.time()
@@ -167,7 +166,8 @@ def dfs_search(map, start, goal):
     print(f"Số nút đã mở rộng: {expanded_nodes}")
 
     return []
- # start, goal là toạ độ (x,y) trong map
+
+    # start, goal là toạ độ (x,y) trong map
     # map là 1 ma trận 2 chiều (m,n)
 def UCS_Algorithm(map, start, goal):
     frontier = []

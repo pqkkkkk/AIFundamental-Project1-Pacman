@@ -1,6 +1,7 @@
 import pygame
 from game_options.Level6 import RunGameOfLevel6
 from game_options.Level3 import RunGameOfLevel3
+
 def RunGameOfLevel(level):
     print(f"Running Level {level}")
     if level == 1:

@@ -5,53 +5,26 @@ from objects import Pacman
 from objects import EventManager
 from objects import ScoreManager
 from images import *
-
 import os
+from Submission.Source.Global import WIDTH, HEIGHT, CELL_SIZE, RED, CreateBackground, map
+
 def RunGameOfLevel6():
     source_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
     os.chdir(source_dir)
     
     pygame.init()
-    # Colors
-    WHITE = (255, 255, 255)
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
-    BLUE = (0, 0, 255)
-    BLACK = (0, 0, 0)
     
     # Screen settings
-    WIDTH = 720
-    HEIGHT = 480
-    CELL_SIZE = 24
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pacman")
 
     # Creating a map
     map_width = WIDTH // CELL_SIZE
     map_height = HEIGHT // CELL_SIZE
-    map = [
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
-        [1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    ]
+    map = map
     
+    # Background
+    background = CreateBackground()
     # Create objects
     eventManager = EventManager.EventManager()
     scoreManager = ScoreManager.ScoreManager(eventManager)
@@ -87,18 +60,6 @@ def RunGameOfLevel6():
     all_sprites.add(redGhost)
     all_sprites.add(pinkGhost)
 
-    # Background
-    background = pygame.Surface((WIDTH, HEIGHT))
-    background.fill((0, 0, 0))
-
-    # Draw map on the background
-    for y in range(len(map)):
-        for x in range(len(map[y])):
-            if map[y][x] == 1:  # Tường
-                pygame.draw.rect(background, BLUE, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-            elif map[y][x] == 0:  # Coin hoặc vật thể khác
-                pygame.draw.rect(background, (0, 0, 0), (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-                pygame.draw.circle(background, WHITE, (x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 6)
     # Điểm số
     score = 0
     font = pygame.font.SysFont(None, 24)
@@ -129,15 +90,15 @@ def RunGameOfLevel6():
             break
         
         # Check collision between pacman and coins
-        hits = pygame.sprite.spritecollide(pacman, coin_group, True)  # True: Xóa coin khi va chạm
+        hits = pygame.sprite.spritecollide(pacman, coin_group, True) # True to remove the coin
         for coin in hits:
             score += 10
         
-        # Vẽ lại màn hình
+        # Rerender the screen
         screen.blit(background, (0, 0))
         all_sprites.draw(screen)
 
-         # Vẽ điểm số
+         # Draw the score
         score_text = font.render(f"Score: {score}", True, (255, 255, 255))
         screen.blit(score_text, (0, 0))
 

@@ -8,7 +8,7 @@ from images import *
 import os
 from Global import WIDTH, HEIGHT, CELL_SIZE, RED, CreateBackground, game_map, PACMAN_POSITION
 
-def RunGameOfLevel5():
+def RunGameOfAnyLevelFrom1To4(level):
     source_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
     os.chdir(source_dir)
     
@@ -17,6 +17,9 @@ def RunGameOfLevel5():
     # Screen settings
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pacman")
+
+    # Creating a map
+    map = game_map
     
     # Background
     background = CreateBackground()
@@ -30,20 +33,27 @@ def RunGameOfLevel5():
     global PACMAN_POSITION
     PACMAN_POSITION = (2 * CELL_SIZE, 2 * CELL_SIZE)
 
-   
-   # Add some ghosts
-    blueGhost = Ghost.Ghost(eventManager, 10 * CELL_SIZE, 10 * CELL_SIZE, "images/BlueGhost.png", Ghost.SearchAlgorigthmName.BFS, (1 * CELL_SIZE, 1 * CELL_SIZE))
-    orangeGhost = Ghost.Ghost(eventManager, 11 * CELL_SIZE, 11* CELL_SIZE, "images/OrangeGhost.png", Ghost.SearchAlgorigthmName.UCS, (1 * CELL_SIZE, 1 * CELL_SIZE))
-    redGhost = Ghost.Ghost(eventManager, 12* CELL_SIZE, 12 * CELL_SIZE, "images/RedGhost.png", Ghost.SearchAlgorigthmName.A_STAR, (1 * CELL_SIZE, 1 * CELL_SIZE))
-    pinkGhost = Ghost.Ghost(eventManager, 14 * CELL_SIZE , 14 * CELL_SIZE, "images/PinkGhost.png", Ghost.SearchAlgorigthmName.DFS, (1 * CELL_SIZE, 1 * CELL_SIZE))
-    ghost_group.add(blueGhost)
-    ghost_group.add(orangeGhost)
-    ghost_group.add(redGhost)
-    ghost_group.add(pinkGhost)
-    all_sprites.add(blueGhost)
-    all_sprites.add(orangeGhost)
-    all_sprites.add(redGhost)
-    all_sprites.add(pinkGhost)
+    # Add some ghosts
+    searchAlgorithmName = Ghost.SearchAlgorigthmName.UCS
+    ghostAvatar = "images/BlueGhost.png"
+    if level == 1:
+        searchAlgorithmName = Ghost.SearchAlgorigthmName.BFS
+        ghostAvatar = "images/BlueGhost.png"
+    elif level == 2:
+        searchAlgorithmName = Ghost.SearchAlgorigthmName.DFS
+        ghostAvatar = "images/PinkGhost.png"
+    elif level == 3:
+        searchAlgorithmName = Ghost.SearchAlgorigthmName.UCS
+        ghostAvatar = "images/OrangeGhost.png"
+    elif level == 4:
+        searchAlgorithmName = Ghost.SearchAlgorigthmName.A_STAR
+        ghostAvatar = "images/RedGhost.png"
+
+    ghost = Ghost.Ghost(eventManager, 10 * CELL_SIZE, 10 * CELL_SIZE,
+                               ghostAvatar, searchAlgorithmName,
+                               (1 * CELL_SIZE,1 * CELL_SIZE))
+    ghost_group.add(ghost)
+    all_sprites.add(ghost)
 
 
     running = True
@@ -57,10 +67,7 @@ def RunGameOfLevel5():
             if event.type == pygame.QUIT:
                 running = False
 
-        pinkGhost.AutoMove()
-        blueGhost.AutoMove()
-        redGhost.AutoMove()
-        orangeGhost.AutoMove()
+        ghost.AutoMove()
 
         pygame.time.delay(200)
         # Check collision between pacman and ghosts

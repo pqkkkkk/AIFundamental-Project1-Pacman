@@ -6,7 +6,7 @@ from objects import EventManager
 from objects import ScoreManager
 from images import *
 import os
-from Submission.Source.Global import WIDTH, HEIGHT, CELL_SIZE, RED, CreateBackground, map
+from Global import WIDTH, HEIGHT, CELL_SIZE, RED, CreateBackground, game_map
 
 def RunGameOfLevel6():
     source_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
@@ -21,7 +21,7 @@ def RunGameOfLevel6():
     # Creating a map
     map_width = WIDTH // CELL_SIZE
     map_height = HEIGHT // CELL_SIZE
-    map = map
+    map = game_map
     
     # Background
     background = CreateBackground()
@@ -32,7 +32,7 @@ def RunGameOfLevel6():
     ghost_group = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
 
-    pacman = Pacman.Pacman(eventManager,10 * CELL_SIZE, 5 * CELL_SIZE, "images/Pacman.png")
+    pacman = Pacman.Pacman(eventManager,3 * CELL_SIZE, 5 * CELL_SIZE, "images/Pacman.png")
     all_sprites.add(pacman)
 
     
@@ -47,10 +47,10 @@ def RunGameOfLevel6():
                 coin_group.add(coin)
                 all_sprites.add(coin)
     # Add some ghosts
-    blueGhost = Ghost.Ghost(eventManager, 10 * CELL_SIZE, 10 * CELL_SIZE, "images/BlueGhost.png")
-    orangeGhost = Ghost.Ghost(eventManager, 11 * CELL_SIZE, 11* CELL_SIZE, "images/OrangeGhost.png")
-    redGhost = Ghost.Ghost(eventManager, 12* CELL_SIZE, 12 * CELL_SIZE, "images/RedGhost.png")
-    pinkGhost = Ghost.Ghost(eventManager, 14 * CELL_SIZE , 14 * CELL_SIZE, "images/PinkGhost.png")
+    blueGhost = Ghost.Ghost(eventManager, 10 * CELL_SIZE, 10 * CELL_SIZE, "images/BlueGhost.png", Ghost.SearchAlgorigthmName.BFS, (1 * CELL_SIZE, 1 * CELL_SIZE))
+    orangeGhost = Ghost.Ghost(eventManager, 11 * CELL_SIZE, 11* CELL_SIZE, "images/OrangeGhost.png", Ghost.SearchAlgorigthmName.UCS, (1 * CELL_SIZE, 1 * CELL_SIZE))
+    redGhost = Ghost.Ghost(eventManager, 12* CELL_SIZE, 12 * CELL_SIZE, "images/RedGhost.png", Ghost.SearchAlgorigthmName.A_STAR, (1 * CELL_SIZE, 1 * CELL_SIZE))
+    pinkGhost = Ghost.Ghost(eventManager, 14 * CELL_SIZE , 14 * CELL_SIZE, "images/PinkGhost.png", Ghost.SearchAlgorigthmName.DFS, (1 * CELL_SIZE, 1 * CELL_SIZE))
     ghost_group.add(blueGhost)
     ghost_group.add(orangeGhost)
     ghost_group.add(redGhost)

@@ -1,6 +1,7 @@
 import heapq
 import time
 import psutil
+from collections import deque
 
 def heuristic_func(cur, goal):
     " Heuristic: Dùng công thức Manhattan tích khoảng cách từ vị trí hiện tại đến PacMan "
@@ -169,7 +170,7 @@ def dfs_search(map, start, goal):
 
     # start, goal là toạ độ (x,y) trong map
     # map là 1 ma trận 2 chiều (m,n)
-def UCS_Algorithm(map, start, goal):
+def ucs_search(map, start, goal):
     frontier = []
     explored = []
     path = []
@@ -177,14 +178,14 @@ def UCS_Algorithm(map, start, goal):
     # ban đầu, khởi tạo trạng thái hiẹn tại = start
     currentState = start     
     heapq.heappush(frontier,(0, start, path))
-        
+    
     while frontier:
         pathCost, currentState, path = heapq.heappop(frontier)
-        path += [currentState]    
+        path += [currentState]
         explored.append(currentState)
 
         if(currentState == goal):
-            return pathCost, path
+            return path
 
         # Kiểm tra 4 hướng (x-1, y), (x, y-1), (x+1, y), (x, y + 1), 
         for dx, dy in moves:
@@ -202,4 +203,4 @@ def UCS_Algorithm(map, start, goal):
                             frontier[i] = (estimatedCost, item[1], new_path)
                     break
 
-    return None, None 
+    return None

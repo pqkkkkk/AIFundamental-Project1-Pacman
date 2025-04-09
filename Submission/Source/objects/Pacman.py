@@ -17,16 +17,16 @@ class Pacman(pygame.sprite.Sprite):
         self.direction = "right"
     def CheckCollisionWithWallIfMove(self,event, map):
         if event.key == pygame.K_LEFT:
-            if map[int(self.y / CELL_SIZE)][int(self.x / CELL_SIZE) - 1] == 1:
+            if map[int(self.x / CELL_SIZE)][int(self.y / CELL_SIZE) - 1] == 1:
                 return True
         elif event.key == pygame.K_RIGHT:
-            if map[int(self.y / CELL_SIZE)][int(self.x / CELL_SIZE) + 1] == 1:
+            if map[int(self.x / CELL_SIZE)][int(self.y / CELL_SIZE) + 1] == 1:
                 return True
         elif event.key == pygame.K_UP:
-            if map[int(self.y / CELL_SIZE) - 1][int(self.x / CELL_SIZE)] == 1:
+            if map[int(self.x / CELL_SIZE) - 1][int(self.y / CELL_SIZE)] == 1:
                 return True
         elif event.key == pygame.K_DOWN:
-            if map[int(self.y / CELL_SIZE) + 1][int(self.x / CELL_SIZE)] == 1:
+            if map[int(self.x / CELL_SIZE) + 1][int(self.y / CELL_SIZE)] == 1:
                 return True
         return False
     def OnKeyDown(self, event):
@@ -44,11 +44,11 @@ class Pacman(pygame.sprite.Sprite):
         self.olx_y = self.y
 
         if self.direction == "left":
-            self.x -= self.speed * CELL_SIZE
-        elif self.direction == "right":
-            self.x += self.speed * CELL_SIZE
-        elif self.direction == "up":
             self.y -= self.speed * CELL_SIZE
-        elif self.direction == "down":
+        elif self.direction == "right":
             self.y += self.speed * CELL_SIZE
-        self.rect = pygame.Rect(self.x, self.y, CELL_SIZE, CELL_SIZE)
+        elif self.direction == "up":
+            self.x -= self.speed * CELL_SIZE
+        elif self.direction == "down":
+            self.x += self.speed * CELL_SIZE
+        self.rect = pygame.Rect(self.y, self.x, CELL_SIZE, CELL_SIZE)

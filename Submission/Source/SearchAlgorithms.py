@@ -2,6 +2,9 @@ import heapq
 import time
 import psutil
 from collections import deque
+timeSpend = 0
+memoryUsage = 0
+expandedNode = 0
 
 def heuristic_func(cur, goal):
     " Heuristic: Dùng công thức Manhattan tích khoảng cách từ vị trí hiện tại đến PacMan "
@@ -23,6 +26,7 @@ def reconstruct_path(came_from, current):
 
 def a_star_search(map, start, goal):
      # Thời gian bắt đầu
+    global timeSpend, memoryUsage, expandedNode
     start_time = time.time()
     
     # Bộ nhớ ban đầu
@@ -37,20 +41,20 @@ def a_star_search(map, start, goal):
     g_score = {start: 0}  # g(n): chi phí từ start đến mỗi ô
     f_score = {start: heuristic_func(start, goal)}  # f(n) = g(n) + h(n)
 
-    expanded_nodes = 0  # Biến đếm số nút đã mở rộng
+    expandedNode = 0  # Biến đếm số nút đã mở rộng
 
     while frontier:
         _, current = heapq.heappop(frontier)  # Lấy ô có f-score thấp nhất
-        expanded_nodes += 1  # Mỗi lần lấy một ô ra, ta coi như đã mở rộng nó
+        expandedNode += 1  # Mỗi lần lấy một ô ra, ta coi như đã mở rộng nó
 
         if current == goal:
             memory_after = process.memory_info().rss  
-            search_time = time.time() - start_time
-            memory_usage = (memory_after - memory_before) / (1024 * 1024)  # Đổi sang MB
+            timeSpend = time.time() - start_time
+            memoryUsage = (memory_after - memory_before) / (1024 * 1024)  # Đổi sang MB
 
-            print(f"Thời gian tìm kiếm: {search_time:.6f} giây")
-            print(f"Bộ nhớ sử dụng: {memory_usage:.6f} MB")
-            print(f"Số nút đã mở rộng: {expanded_nodes}")
+            print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
+            print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
+            print(f"Số nút đã mở rộng: {expandedNode}")
 
             return reconstruct_path(came_from, current)  # Trả về đường đi tối ưu
 
@@ -67,16 +71,17 @@ def a_star_search(map, start, goal):
                     heapq.heappush(frontier, (f_score[neighbor], neighbor))
 
     memory_after = process.memory_info().rss  
-    search_time = time.time() - start_time
-    memory_usage = (memory_after - memory_before) / (1024 * 1024)  # Đổi sang MB
+    timeSpend = time.time() - start_time
+    memoryUsage = (memory_after - memory_before) / (1024 * 1024)  # Đổi sang MB
 
-    print(f"Thời gian tìm kiếm: {search_time:.6f} giây")
-    print(f"Bộ nhớ sử dụng: {memory_usage:.6f} MB")
-    print(f"Số nút đã mở rộng: {expanded_nodes}")
+    print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
+    print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
+    print(f"Số nút đã mở rộng: {expandedNode}")
 
     return []  # Không tìm thấy đường đi
   
 def bfs_search(map, start, goal):
+    global timeSpend, memoryUsage, expandedNode
     start_time = time.time()
     process = psutil.Process()
     memory_before = process.memory_info().rss
@@ -84,20 +89,20 @@ def bfs_search(map, start, goal):
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     queue = deque([start])
     came_from = {start: None}
-    expanded_nodes = 0
+    expandedNode = 0
 
     while queue:
         current = queue.popleft()
-        expanded_nodes += 1
+        expandedNode += 1
 
         if current == goal:
             memory_after = process.memory_info().rss
-            search_time = time.time() - start_time
-            memory_usage = (memory_after - memory_before) / (1024 * 1024)  
+            timeSpend = time.time() - start_time
+            memoryUsage = (memory_after - memory_before) / (1024 * 1024)  
 
-            print(f"Thời gian tìm kiếm: {search_time:.6f} giây")
-            print(f"Bộ nhớ sử dụng: {memory_usage:.6f} MB")
-            print(f"Số nút đã mở rộng: {expanded_nodes}")
+            print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
+            print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
+            print(f"Số nút đã mở rộng: {expandedNode}")
 
             path = []
             while current is not None:
@@ -113,16 +118,17 @@ def bfs_search(map, start, goal):
                     queue.append(neighbor)
 
     memory_after = process.memory_info().rss
-    search_time = time.time() - start_time
-    memory_usage = (memory_after - memory_before) / (1024 * 1024)
+    timeSpend = time.time() - start_time
+    memoryUsage = (memory_after - memory_before) / (1024 * 1024)
 
-    print(f"Thời gian tìm kiếm: {search_time:.6f} giây")
-    print(f"Bộ nhớ sử dụng: {memory_usage:.6f} MB")
-    print(f"Số nút đã mở rộng: {expanded_nodes}")
+    print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
+    print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
+    print(f"Số nút đã mở rộng: {expandedNode}")
 
     return []
 
 def dfs_search(map, start, goal):
+    global timeSpend, memoryUsage, expandedNode
     start_time = time.time()
     process = psutil.Process()
     memory_before = process.memory_info().rss
@@ -130,20 +136,20 @@ def dfs_search(map, start, goal):
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     stack = [start]
     came_from = {start: None}
-    expanded_nodes = 0
+    expandednode = 0
 
     while stack:
         current = stack.pop()
-        expanded_nodes += 1
+        expandedNode += 1
 
         if current == goal:
             memory_after = process.memory_info().rss
-            search_time = time.time() - start_time
-            memory_usage = (memory_after - memory_before) / (1024 * 1024)
+            timeSpend = time.time() - start_time
+            memoryUsage = (memory_after - memory_before) / (1024 * 1024)
 
-            print(f"Thời gian tìm kiếm: {search_time:.6f} giây")
-            print(f"Bộ nhớ sử dụng: {memory_usage:.6f} MB")
-            print(f"Số nút đã mở rộng: {expanded_nodes}")
+            print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
+            print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
+            print(f"Số nút đã mở rộng: {expandedNode}")
 
             path = []
             while current is not None:
@@ -159,18 +165,24 @@ def dfs_search(map, start, goal):
                     stack.append(neighbor)
 
     memory_after = process.memory_info().rss
-    search_time = time.time() - start_time
-    memory_usage = (memory_after - memory_before) / (1024 * 1024)
+    timeSpend = time.time() - start_time
+    memoryUsage = (memory_after - memory_before) / (1024 * 1024)
 
-    print(f"Thời gian tìm kiếm: {search_time:.6f} giây")
-    print(f"Bộ nhớ sử dụng: {memory_usage:.6f} MB")
-    print(f"Số nút đã mở rộng: {expanded_nodes}")
+    print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
+    print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
+    print(f"Số nút đã mở rộng: {expandedNode}")
 
     return []
 
     # start, goal là toạ độ (x,y) trong map
     # map là 1 ma trận 2 chiều (m,n)
 def ucs_search(map, start, goal):
+    global timeSpend, memoryUsage, expandedNode
+    start_time = time.time()
+    # Bộ nhớ ban đầu
+    process = psutil.Process()
+    memory_before = process.memory_info().rss 
+    expandedNode = 0
     frontier = []
     explored = []
     path = []
@@ -181,10 +193,20 @@ def ucs_search(map, start, goal):
     
     while frontier:
         pathCost, currentState, path = heapq.heappop(frontier)
+        expandedNode += 1
+
         path += [currentState]
         explored.append(currentState)
 
         if(currentState == goal):
+            memory_after = process.memory_info().rss
+            timeSpend = time.time() - start_time
+            memoryUsage = (memory_after - memory_before) / (1024 * 1024)
+
+            print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
+            print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
+            print(f"Số nút đã mở rộng: {expandedNode}")
+
             return path
 
         # Kiểm tra 4 hướng (x-1, y), (x, y-1), (x+1, y), (x, y + 1), 

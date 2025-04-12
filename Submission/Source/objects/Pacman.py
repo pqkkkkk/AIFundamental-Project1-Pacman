@@ -11,10 +11,11 @@ class Pacman(pygame.sprite.Sprite):
         self.old_y = y
         self.avatar = pygame.image.load(image)
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
-        self.image.blit(self.avatar, (0, 0))  # Draw self.avatar onto self.image
+        self.image.blit(self.avatar, (0, 0))
         self.rect = self.image.get_rect(top=x, left=y)
         self.speed = 1
         self.direction = "right"
+
     def CheckCollisionWithWallIfMove(self,event, map):
         if event.key == pygame.K_LEFT:
             if map[int(self.x / CELL_SIZE)][int(self.y / CELL_SIZE) - 1] == 1:
@@ -29,6 +30,7 @@ class Pacman(pygame.sprite.Sprite):
             if map[int(self.x / CELL_SIZE) + 1][int(self.y / CELL_SIZE)] == 1:
                 return True
         return False
+    
     def OnKeyDown(self, event):
         if event.key == pygame.K_LEFT:
             self.direction = "left"
@@ -39,7 +41,7 @@ class Pacman(pygame.sprite.Sprite):
         elif event.key == pygame.K_DOWN:
             self.direction = "down"
 
-    def Update(self):
+    def Update(self,frameCouter):
         self.olx_x = self.x
         self.olx_y = self.y
 
@@ -52,3 +54,10 @@ class Pacman(pygame.sprite.Sprite):
         elif self.direction == "down":
             self.x += self.speed * CELL_SIZE
         self.rect = pygame.Rect(self.y, self.x, CELL_SIZE, CELL_SIZE)
+
+        data = {
+            "x": self.x,
+            "y": self.y,
+            "frameCounter": frameCouter,
+        }
+        self.eventManager.publish("PACMAN_MOVED", data)

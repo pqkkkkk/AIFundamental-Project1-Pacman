@@ -2,7 +2,7 @@ import pygame
 from enum import Enum
 from SearchAlgorithms import *
 
-from Global import WIDTH, HEIGHT, CELL_SIZE, RED, CreateBackground, game_map, PACMAN_POSITION
+from Global import CELL_SIZE, game_map, PACMAN_POSITION
 
 class SearchAlgorigthmName(Enum):
     A_STAR = "A_STAR"
@@ -12,7 +12,7 @@ class SearchAlgorigthmName(Enum):
 
 class Ghost(pygame.sprite.Sprite):
     @staticmethod
-    def executeSearchPacman(searchAlgorigthmName, map, start, goal):
+    def ExecuteSearchPacman(searchAlgorigthmName, map, start, goal):
         path = []
         if searchAlgorigthmName == SearchAlgorigthmName.A_STAR:
             path = a_star_search(map, start, goal)
@@ -31,6 +31,7 @@ class Ghost(pygame.sprite.Sprite):
         self.y = y
         self.pacman_position = pacman_position
         self.path = []
+        self.updatePathInterval = 15
         self.currentPositionInPath = 0
         self.searchAlgorigthmName = searchAlgorigthmName
         self.avatar = pygame.image.load(image)
@@ -41,15 +42,40 @@ class Ghost(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(top=x, left=y)
     
     def OnPacmanMoved(self, data):
-        self.path = Ghost.executeSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
-        self.currentPositionInPath = 0
+        if data is None:
+            self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
+            self.currentPositionInPath = 0
+        elif data["frameCounter"] % 15 == 0:
+            self.pacman_position = (data["x"], data["y"])
+            self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
+            self.currentPositionInPath = 0
+        elif self.currentPositionInPath >= len(self.path):
+            self.pacman_position = (data["x"], data["y"])
+            self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
+            self.currentPositionInPath = 0
+        
+    @staticmethod
+    def CheckCollisionIfMoveWithAnotherGhost(new_x, new_y):
+        if game_map[int(new_x / CELL_SIZE)][int(new_y / CELL_SIZE)] == -1:
+            print("Collision with another ghost")
+            return True
+        return False
     
     def AutoMove(self):
-        if self.currentPositionInPath < len(self.path):
-            self.x= self.path[self.currentPositionInPath][0] * CELL_SIZE
-            self.y = self.path[self.currentPositionInPath][1] * CELL_SIZE
-            self.rect = pygame.Rect(self.y, self.x, CELL_SIZE, CELL_SIZE)
-            self.currentPositionInPath += 1
-        else:
-            pass
+        if self.currentPositionInPath >= len(self.path):
+            return
+
+        new_x = self.path[self.currentPositionInPath][0] * CELL_SIZE
+        new_y = self.path[self.currentPositionInPath][1] * CELL_SIZE
+
+        if self.CheckCollisionIfMoveWithAnotherGhost(new_x, new_y):
+            self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
+            self.currentPositionInPath = 0
+        
+        game_map[int(self.x / CELL_SIZE)][int(self.y / CELL_SIZE)] = 0
+        self.x= new_x
+        self.y = new_y
+        game_map[int(self.x / CELL_SIZE)][int(self.y / CELL_SIZE)] = -1
+        self.rect = pygame.Rect(self.y, self.x, CELL_SIZE, CELL_SIZE)
+        self.currentPositionInPath += 1
         

@@ -25,17 +25,15 @@ def RunGameOfLevel5():
     ghost_group = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
 
-    pacman = Pacman.Pacman(eventManager,1 * CELL_SIZE, 1 * CELL_SIZE, "images/Pacman.png")
+    pacman_position = (1 * CELL_SIZE, 1 * CELL_SIZE)
+    pacman = Pacman.Pacman(eventManager,pacman_position[0], pacman_position[1], "images/Pacman.png")
     all_sprites.add(pacman)
-    global PACMAN_POSITION
-    PACMAN_POSITION = (2 * CELL_SIZE, 2 * CELL_SIZE)
 
-   
    # Add some ghosts
-    blueGhost = Ghost.Ghost(eventManager, 10 * CELL_SIZE, 10 * CELL_SIZE, "images/BlueGhost.png", Ghost.SearchAlgorigthmName.BFS, (1 * CELL_SIZE, 1 * CELL_SIZE))
-    orangeGhost = Ghost.Ghost(eventManager, 11 * CELL_SIZE, 11* CELL_SIZE, "images/OrangeGhost.png", Ghost.SearchAlgorigthmName.UCS, (1 * CELL_SIZE, 1 * CELL_SIZE))
-    redGhost = Ghost.Ghost(eventManager, 12* CELL_SIZE, 12 * CELL_SIZE, "images/RedGhost.png", Ghost.SearchAlgorigthmName.A_STAR, (1 * CELL_SIZE, 1 * CELL_SIZE))
-    pinkGhost = Ghost.Ghost(eventManager, 14 * CELL_SIZE , 14 * CELL_SIZE, "images/PinkGhost.png", Ghost.SearchAlgorigthmName.DFS, (1 * CELL_SIZE, 1 * CELL_SIZE))
+    blueGhost = Ghost.Ghost(eventManager, 14 * CELL_SIZE, 18 * CELL_SIZE, "images/BlueGhost.png", Ghost.SearchAlgorigthmName.BFS, pacman_position)
+    orangeGhost = Ghost.Ghost(eventManager, 9 * CELL_SIZE, 25* CELL_SIZE, "images/OrangeGhost.png", Ghost.SearchAlgorigthmName.UCS, pacman_position)
+    redGhost = Ghost.Ghost(eventManager, 15 * CELL_SIZE, 15 * CELL_SIZE, "images/RedGhost.png", Ghost.SearchAlgorigthmName.A_STAR, pacman_position)
+    pinkGhost = Ghost.Ghost(eventManager, 14 * CELL_SIZE , 15 * CELL_SIZE, "images/PinkGhost.png", Ghost.SearchAlgorigthmName.DFS, pacman_position)
     ghost_group.add(blueGhost)
     ghost_group.add(orangeGhost)
     ghost_group.add(redGhost)
@@ -57,12 +55,12 @@ def RunGameOfLevel5():
             if event.type == pygame.QUIT:
                 running = False
 
+        orangeGhost.AutoMove()
         pinkGhost.AutoMove()
         blueGhost.AutoMove()
         redGhost.AutoMove()
-        orangeGhost.AutoMove()
 
-        pygame.time.delay(200)
+        pygame.time.delay(400)
         # Check collision between pacman and ghosts
         hits = pygame.sprite.spritecollide(pacman, ghost_group, False)
         if hits:

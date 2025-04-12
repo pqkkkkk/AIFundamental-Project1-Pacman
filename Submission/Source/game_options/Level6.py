@@ -60,12 +60,19 @@ def RunGameOfLevel6():
     all_sprites.add(redGhost)
     all_sprites.add(pinkGhost)
 
-    # Điểm số
+    # Game score
     score = 0
     font = pygame.font.SysFont(None, 24)
+    
+    # Variable to control ghost movement
+    frameCouter = 0
+    ghostMoveInterval = 15
 
     running = True
     clock = pygame.time.Clock()
+
+    # Publish the event to ghost to start moving
+    eventManager.publish("PACMAN_MOVED", None)
 
     while running:
         for event in pygame.event.get():
@@ -74,8 +81,21 @@ def RunGameOfLevel6():
             elif event.type == pygame.KEYDOWN:
                 if not pacman.CheckCollisionWithWallIfMove(event,map):
                     pacman.OnKeyDown(event)
-                    pacman.Update()
+                    pacman.Update(frameCouter)
         
+        frameCouter += 1
+
+        if frameCouter >= 70:
+            ghostMoveInterval = 14
+        if frameCouter >= 100:
+            ghostMoveInterval = 13
+        
+        if frameCouter % ghostMoveInterval == 0:
+            orangeGhost.AutoMove()
+            pinkGhost.AutoMove()
+            blueGhost.AutoMove()
+            redGhost.AutoMove()
+
         # Check collision between pacman and ghosts
         hits = pygame.sprite.spritecollide(pacman, ghost_group, False)
         if hits:
@@ -93,6 +113,19 @@ def RunGameOfLevel6():
         hits = pygame.sprite.spritecollide(pacman, coin_group, True) # True to remove the coin
         for coin in hits:
             score += 10
+        
+        # Check collision between pacman and ghosts
+        ghost_hits = pygame.sprite.spritecollide(pacman, ghost_group, False)
+        if ghost_hits:
+            running = False
+            # Display a game over message and stop the game
+            font = pygame.font.Font(None, 36)
+            text = font.render(f"Game Over", True, RED)
+            text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
+            screen.blit(text, text_rect)
+            pygame.display.flip()
+            pygame.time.wait(1000)
+            break
         
         # Rerender the screen
         screen.blit(background, (0, 0))

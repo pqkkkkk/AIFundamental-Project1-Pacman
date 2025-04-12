@@ -66,7 +66,7 @@ def RunGameOfLevel6():
     
     # Variable to control ghost movement
     frameCouter = 0
-    ghostMoveInterval = 15
+    ghostMoveInterval = 10
 
     running = True
     clock = pygame.time.Clock()

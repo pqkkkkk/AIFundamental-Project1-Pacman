@@ -86,7 +86,7 @@ def bfs_search(map, start, goal):
     process = psutil.Process()
     memory_before = process.memory_info().rss
 
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    directions = [(-1,0), (0,-1), (1, 0), (0, 1)]
     queue = deque([start])
     came_from = {start: None}
     expandedNode = 0
@@ -112,7 +112,7 @@ def bfs_search(map, start, goal):
 
         for dx, dy in directions:
             neighbor = (current[0] + dx, current[1] + dy)
-            if 0 <= neighbor[0] < len(map) and 0 <= neighbor[1] < len(map[0]) and map[neighbor[0]][neighbor[1]] != 1:
+            if 0 <= neighbor[0] < len(map) and 0 <= neighbor[1] < len(map[0]) and map[neighbor[0]][neighbor[1]] == 0:
                 if neighbor not in came_from:
                     came_from[neighbor] = current
                     queue.append(neighbor)
@@ -133,7 +133,7 @@ def dfs_search(map, start, goal):
     process = psutil.Process()
     memory_before = process.memory_info().rss
 
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    directions = [(-1,0), (0, -1), (1, 0), (0, 1)]
     stack = [start]
     came_from = {start: None}
     expandednode = 0
@@ -159,7 +159,7 @@ def dfs_search(map, start, goal):
 
         for dx, dy in directions:
             neighbor = (current[0] + dx, current[1] + dy)
-            if 0 <= neighbor[0] < len(map) and 0 <= neighbor[1] < len(map[0]) and map[neighbor[0]][neighbor[1]] != 1:
+            if 0 <= neighbor[0] < len(map) and 0 <= neighbor[1] < len(map[0]) and map[neighbor[0]][neighbor[1]] == 0:
                 if neighbor not in came_from:
                     came_from[neighbor] = current
                     stack.append(neighbor)

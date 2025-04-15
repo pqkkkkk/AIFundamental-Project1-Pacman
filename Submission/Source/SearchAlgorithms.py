@@ -13,7 +13,7 @@ def heuristic_func(cur, goal):
 def is_valid_position(cur, map):
     " Kiểm tra tính hợp lệ của vị trí hiện tại (không vượt ra ngoài, không dính tường)"
     x, y = cur
-    return 0 <= x < len(map) and 0 <= y < len(map[0]) and map[x][y] != 1
+    return 0 <= x < len(map) and 0 <= y < len(map[0]) and map[x][y] == 0
 
 def reconstruct_path(came_from, current):
     "Xây dựng lại đường đi từ Goal đến Start"
@@ -52,10 +52,6 @@ def a_star_search(map, start, goal):
             timeSpend = time.time() - start_time
             memoryUsage = (memory_after - memory_before) / (1024 * 1024)  # Đổi sang MB
 
-            print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
-            print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
-            print(f"Số nút đã mở rộng: {expandedNode}")
-
             return reconstruct_path(came_from, current)  # Trả về đường đi tối ưu
 
         for dx, dy in directions:
@@ -74,9 +70,6 @@ def a_star_search(map, start, goal):
     timeSpend = time.time() - start_time
     memoryUsage = (memory_after - memory_before) / (1024 * 1024)  # Đổi sang MB
 
-    print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
-    print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
-    print(f"Số nút đã mở rộng: {expandedNode}")
 
     return []  # Không tìm thấy đường đi
   
@@ -100,10 +93,6 @@ def bfs_search(map, start, goal):
             timeSpend = time.time() - start_time
             memoryUsage = (memory_after - memory_before) / (1024 * 1024)  
 
-            print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
-            print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
-            print(f"Số nút đã mở rộng: {expandedNode}")
-
             path = []
             while current is not None:
                 path.append(current)
@@ -120,10 +109,6 @@ def bfs_search(map, start, goal):
     memory_after = process.memory_info().rss
     timeSpend = time.time() - start_time
     memoryUsage = (memory_after - memory_before) / (1024 * 1024)
-
-    print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
-    print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
-    print(f"Số nút đã mở rộng: {expandedNode}")
 
     return []
 
@@ -147,10 +132,6 @@ def dfs_search(map, start, goal):
             timeSpend = time.time() - start_time
             memoryUsage = (memory_after - memory_before) / (1024 * 1024)
 
-            print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
-            print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
-            print(f"Số nút đã mở rộng: {expandedNode}")
-
             path = []
             while current is not None:
                 path.append(current)
@@ -167,10 +148,6 @@ def dfs_search(map, start, goal):
     memory_after = process.memory_info().rss
     timeSpend = time.time() - start_time
     memoryUsage = (memory_after - memory_before) / (1024 * 1024)
-
-    print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
-    print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
-    print(f"Số nút đã mở rộng: {expandedNode}")
 
     return []
 
@@ -202,10 +179,6 @@ def ucs_search(map, start, goal):
             memory_after = process.memory_info().rss
             timeSpend = time.time() - start_time
             memoryUsage = (memory_after - memory_before) / (1024 * 1024)
-
-            print(f"Thời gian tìm kiếm: {timeSpend:.6f} giây")
-            print(f"Bộ nhớ sử dụng: {memoryUsage:.6f} MB")
-            print(f"Số nút đã mở rộng: {expandedNode}")
 
             return path
 

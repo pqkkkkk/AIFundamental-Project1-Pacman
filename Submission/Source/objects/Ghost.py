@@ -32,8 +32,9 @@ class Ghost(pygame.sprite.Sprite):
         self.pacman_position = pacman_position
         self.path = []
         self.updatePathInterval = 15
-        self.currentPositionInPath = 0
+        self.currentIndexInPath = 0
         self.searchAlgorigthmName = searchAlgorigthmName
+        self.ghostName = image
         self.avatar = pygame.image.load(image)
         self.eventManager = eventManager
         eventManager.subscribe("PACMAN_MOVED",self.OnPacmanMoved)
@@ -44,38 +45,40 @@ class Ghost(pygame.sprite.Sprite):
     def OnPacmanMoved(self, data):
         if data is None:
             self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
-            self.currentPositionInPath = 0
-        elif data["frameCounter"] % 15 == 0:
+            self.currentIndexInPath = 0
+        else:
             self.pacman_position = (data["x"], data["y"])
-            self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
-            self.currentPositionInPath = 0
-        elif self.currentPositionInPath >= len(self.path):
-            self.pacman_position = (data["x"], data["y"])
-            self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
-            self.currentPositionInPath = 0
+
+            if data["frameCounter"] % 15 == 0:
+                self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
+                self.currentIndexInPath = 0
+            elif self.currentIndexInPath >= len(self.path):
+                self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
+                self.currentIndexInPath = 0
         
     @staticmethod
     def CheckCollisionIfMoveWithAnotherGhost(new_x, new_y):
         if game_map[int(new_x / CELL_SIZE)][int(new_y / CELL_SIZE)] == -1:
-            print("Collision with another ghost")
             return True
         return False
     
     def AutoMove(self):
-        if self.currentPositionInPath >= len(self.path):
+        if self.currentIndexInPath >= len(self.path):
             return
 
-        new_x = self.path[self.currentPositionInPath][0] * CELL_SIZE
-        new_y = self.path[self.currentPositionInPath][1] * CELL_SIZE
+        possible_new_x = self.path[self.currentIndexInPath][0] * CELL_SIZE
+        possible_new_y = self.path[self.currentIndexInPath][1] * CELL_SIZE
 
-        if self.CheckCollisionIfMoveWithAnotherGhost(new_x, new_y):
+        if Ghost.CheckCollisionIfMoveWithAnotherGhost(possible_new_x, possible_new_y):
             self.path = Ghost.ExecuteSearchPacman(self.searchAlgorigthmName, game_map, (self.x // CELL_SIZE, self.y // CELL_SIZE), (self.pacman_position[0] // CELL_SIZE, self.pacman_position[1] // CELL_SIZE))
-            self.currentPositionInPath = 0
-        
-        game_map[int(self.x / CELL_SIZE)][int(self.y / CELL_SIZE)] = 0
-        self.x= new_x
-        self.y = new_y
-        game_map[int(self.x / CELL_SIZE)][int(self.y / CELL_SIZE)] = -1
-        self.rect = pygame.Rect(self.y, self.x, CELL_SIZE, CELL_SIZE)
-        self.currentPositionInPath += 1
+            self.currentIndexInPath = 1
+        else:   
+            old_x = self.x
+            old_y = self.y
+            self.x= possible_new_x
+            self.y = possible_new_y
+            game_map[int(self.x / CELL_SIZE)][int(self.y / CELL_SIZE)] = -1
+            self.rect = pygame.Rect(self.y, self.x, CELL_SIZE, CELL_SIZE)
+            game_map[int(old_x / CELL_SIZE)][int(old_y / CELL_SIZE)] = 0
+            self.currentIndexInPath += 1
         

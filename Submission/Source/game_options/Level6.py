@@ -14,6 +14,11 @@ def RunGameOfLevel6():
     
     pygame.init()
     
+    pygame.mixer.init()
+    pygame.mixer.music.load("images/pacman_beginning.wav")
+    pygame.mixer.music.play(-1)  # Play the music in a loop
+    pygame.mixer.music.set_volume(0.5)  # Set the volume (0.0 to 1.0)
+
     # Screen settings
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pacman")
@@ -82,7 +87,11 @@ def RunGameOfLevel6():
             ghostMoveInterval = 14
         if frameCouter >= 100:
             ghostMoveInterval = 13
-        
+        if frameCouter>= 160:
+            ghostMoveInterval = 12
+        if frameCouter >= 200:
+            ghostMoveInterval = 11
+            
         if frameCouter % ghostMoveInterval == 0:
             orangeGhost.AutoMove()
             pinkGhost.AutoMove()

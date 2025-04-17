@@ -89,9 +89,7 @@ def RunGameOfLevel6():
             ghostMoveInterval = 13
         if frameCouter>= 160:
             ghostMoveInterval = 12
-        if frameCouter >= 200:
-            ghostMoveInterval = 11
-            
+
         if frameCouter % ghostMoveInterval == 0:
             orangeGhost.AutoMove()
             pinkGhost.AutoMove()

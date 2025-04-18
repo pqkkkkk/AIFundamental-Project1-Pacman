@@ -58,6 +58,9 @@ def RunGameOfLevel5():
     # Publish the event to ghost to start moving
     eventManager.publish("PACMAN_MOVED", None)
 
+    # Tính thời gian tìm được pacman
+    start_ticks = pygame.time.get_ticks()
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -73,13 +76,57 @@ def RunGameOfLevel5():
         hits = pygame.sprite.spritecollide(pacman, ghost_group, False)
         if hits:
             running = False
+            elapsed_time = (pygame.time.get_ticks() - start_ticks) // 1000  # tính bằng giây
+            killer_ghost = hits[0]  # ghost đầu tiên va chạm
+
+            # Gán tên dựa theo thuật toán tìm đường
+            ghost_name = "Unknown"
+            if killer_ghost.searchAlgorigthmName == Ghost.SearchAlgorigthmName.BFS:
+                ghost_name = "BlueGhost (BFS)"
+            elif killer_ghost.searchAlgorigthmName == Ghost.SearchAlgorigthmName.DFS:
+                ghost_name = "PinkGhost (DFS)"
+            elif killer_ghost.searchAlgorigthmName == Ghost.SearchAlgorigthmName.UCS:
+                ghost_name = "OrangeGhost (UCS)"
+            elif killer_ghost.searchAlgorigthmName == Ghost.SearchAlgorigthmName.A_STAR:
+                ghost_name = "RedGhost (A*)"
+    
             # Display a game over message and stop the game
-            font = pygame.font.Font(None, 36)
+            screen.fill("black")
+            
+            font = pygame.font.Font(None, 48)
+            info_font = pygame.font.Font(None, 30)
+            # Game over
             text = font.render(f"Game Over", True, RED)
-            text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
+            text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2 - 60))
+            
+            # time run
+            time_text = info_font.render(f"Time: {elapsed_time} seconds", True, (255, 255, 255))
+            time_rect = time_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 20))
+            
+            # pacman killer
+            killer_text = info_font.render(f"Killer: {ghost_name}", True, (255, 255, 255))
+            killer_rect = killer_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 20))
+
+            # nút exit
+            button_text = info_font.render("Exit", True, (255, 255, 255))
+            button_rect = pygame.Rect(WIDTH // 2 - 60, HEIGHT // 2 + 60, 120, 40)  # x, y, width, height
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            
             screen.blit(text, text_rect)
+            screen.blit(time_text, time_rect)
+            screen.blit(killer_text, killer_rect)
+            pygame.draw.rect(screen, RED, button_rect)  # Nền nút
+            screen.blit(button_text, button_text_rect)
             pygame.display.flip()
-            pygame.time.wait(1000)
+            
+            waiting = True
+            while waiting:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        waiting = False
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        if button_rect.collidepoint(event.pos):
+                            waiting = False
             break
         
         

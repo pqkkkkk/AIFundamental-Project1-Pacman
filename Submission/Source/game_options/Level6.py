@@ -95,19 +95,6 @@ def RunGameOfLevel6():
             pinkGhost.AutoMove()
             blueGhost.AutoMove()
             redGhost.AutoMove()
-
-        # Check collision between pacman and ghosts
-        hits = pygame.sprite.spritecollide(pacman, ghost_group, False)
-        if hits:
-            running = False
-            # Display a game over message and stop the game
-            font = pygame.font.Font(None, 36)
-            text = font.render(f"Game Over. Score : {score}", True, RED)
-            text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
-            screen.blit(text, text_rect)
-            pygame.display.flip()
-            pygame.time.wait(2000)
-            break
         
         # Check collision between pacman and coins
         hits = pygame.sprite.spritecollide(pacman, coin_group, True) # True to remove the coin
@@ -118,29 +105,45 @@ def RunGameOfLevel6():
         ghost_hits = pygame.sprite.spritecollide(pacman, ghost_group, False)
         if ghost_hits:
             running = False
-            
-            screen.fill(BLACK)
-            
-            # font 
-            GameOver_font = pygame.font.Font(None, 60)
-            info_font = pygame.font.Font(None, 30)
+            # Display a game over message and stop the game
+            killer_ghost = ghost_hits[0]
 
-            # Text
-            GameOver_text = GameOver_font.render(f"Game over", True, RED)
-            end_score_text = info_font.render(f"Score: {score}", True, RED)
-            end_score_rect = end_score_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 130))
-            # Nút Exit
+            # Gán tên dựa theo thuật toán tìm đường
+            ghost_name = "Unknown"
+            if killer_ghost.searchAlgorigthmName == Ghost.SearchAlgorigthmName.BFS:
+                ghost_name = "Blue Ghost (BFS)"
+            elif killer_ghost.searchAlgorigthmName == Ghost.SearchAlgorigthmName.DFS:
+                ghost_name = "Pink Ghost (DFS)"
+            elif killer_ghost.searchAlgorigthmName == Ghost.SearchAlgorigthmName.UCS:
+                ghost_name = "Orange Ghost (UCS)"
+            elif killer_ghost.searchAlgorigthmName == Ghost.SearchAlgorigthmName.A_STAR:
+                ghost_name = "Red Ghost (A*)"
+    
+            screen.fill("black")
+            font = pygame.font.Font(None, 60)
+            info_font = pygame.font.Font(None, 32)
+
+            text = font.render(f"Game Over", True, RED)
+            result = info_font.render(f"Score: {score} coins", True, (255, 255, 255))
+            killer = info_font.render(f"Killer: {ghost_name}", True, (255,255,255))
+
+            text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2 - 80))
+            result_rect = result.get_rect(center=(WIDTH//2, HEIGHT//2 + 30))
+            killer_rect = killer.get_rect(center=(WIDTH//2, HEIGHT//2 - 20))
+                            
+            # Nút exit
             button_font = pygame.font.Font(None, 30)
             button_text = button_font.render("Exit", True, (255, 255, 255))
-            button_rect = pygame.Rect(WIDTH // 2 - 60, HEIGHT // 2 + 100, 120, 40)
+            button_rect = pygame.Rect(WIDTH // 2 - 60, HEIGHT // 2 + 70, 120, 40)  # x, y, width, height
             button_text_rect = button_text.get_rect(center=button_rect.center)
 
-            # Vẽ lên màn hình
-            screen.blit(GameOver_text, (WIDTH // 2 - 100, HEIGHT // 2 - 130))
-            pygame.draw.rect(screen, RED, button_rect)
-            screen.blit(end_score_text, end_score_rect)
+            # vẽ lên màn hình
+            screen.blit(text, text_rect)
+            screen.blit(killer, killer_rect)
+            screen.blit(result, result_rect)
+            pygame.draw.rect(screen, RED, button_rect)  # Nền nút
             screen.blit(button_text, button_text_rect)
-            
+
             pygame.display.flip()
             
             waiting = True
@@ -152,6 +155,7 @@ def RunGameOfLevel6():
                         if button_rect.collidepoint(event.pos):
                             waiting = False
             break
+
         
         # Rerender the screen
         screen.blit(background, (0, 0))

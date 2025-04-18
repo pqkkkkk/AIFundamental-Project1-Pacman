@@ -15,12 +15,12 @@ def is_valid_position(cur, map):
     x, y = cur
     return 0 <= x < len(map) and 0 <= y < len(map[0]) and map[x][y] == 0
 
-def reconstruct_path(came_from, current):
+def reconstruct_path(came_from, current, start):
     "Xây dựng lại đường đi từ Goal đến Start"
-    path = []
-    while current in came_from:
-        path.append(current)
+    path = [current]
+    while current != start:
         current = came_from[current]
+        path.append(current)
     path.reverse()
     return path
 
@@ -52,7 +52,7 @@ def a_star_search(map, start, goal):
             timeSpend = time.time() - start_time
             memoryUsage = (memory_after - memory_before) / (1024 * 1024)  # Đổi sang MB
 
-            return reconstruct_path(came_from, current)  # Trả về đường đi tối ưu
+            return reconstruct_path(came_from, current,start)  # Trả về đường đi tối ưu
 
         for dx, dy in directions:
             neighbor = (current[0] + dx, current[1] + dy)

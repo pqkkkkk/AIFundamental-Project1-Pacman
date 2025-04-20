@@ -22,7 +22,7 @@ def RunGameOfLevel(level):
     
 def ShowLevelSelection():
     pygame.init()
-    screen = pygame.display.set_mode((600, 400))
+    screen = pygame.display.set_mode((700, 400))
     pygame.display.set_caption("Select Level")
     font = pygame.font.Font(None, 36)
     clock = pygame.time.Clock()
@@ -33,6 +33,11 @@ def ShowLevelSelection():
     while selected_level is None:
         screen.fill((0, 0, 0))
         y_offset = 100
+
+        title_text = font.render("Select Level (Press 1-6 to select corresponding level)", True, (255, 255, 255))
+        title_rect = title_text.get_rect(center=(screen.get_width() // 2, 50))
+        screen.blit(title_text, title_rect)
+
         for level in levels:
             text = font.render(f"Level {level}", True, (255, 255, 255))
             text_rect = text.get_rect(center=(300, y_offset))
